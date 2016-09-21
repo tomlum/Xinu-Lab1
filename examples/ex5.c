@@ -1,6 +1,7 @@
 /* ex5.c - main, prod2, cons2 */
 
 #include <xinu.h>
+#include <lab1app.h>
 
 process prod2(sid32, sid32), cons2(sid32, sid32);
 
