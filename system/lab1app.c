@@ -3,24 +3,22 @@
 #include <xinu.h>
 
 /*------------------------------------------------------------------------
- *  lab1app1  -  prints the current value of pr_cputime and pr_tsready for the current
-process, callsleepms() to sleep for three seconds, and then prints both values again
+ *  lab1app1  -  Prints the current value of pr_cputime and pr_tsready for the 
+ *  current process, callsleepms() to sleep for three seconds, and then prints 
+ *  both values again.
  *------------------------------------------------------------------------
  */
 process lab1app1(void)
 {
 	intmask		mask;		/* Saved interrupt mask		*/
-	int32		retval;		/* Value to return to caller	*/
 
 	mask = disable();
-	if (isbaddev(descrp)) {
-		restore(mask);
-		return SYSERR;
-	}
 
-	printf("%d\n", pr_cputime);
-	printf("%d\n", pr_tsready);
+	kprintf("%d\n", pr_cputime);
+	kprintf("%d\n", pr_tsready);
+	sleepms(3000);
+	kprintf("%d\n", pr_cputime);
+	kprintf("%d\n", pr_tsready);
 
 	restore(mask);
-	return retval;
 }
