@@ -38,6 +38,11 @@
 
 #define NDESC		5	/* must be odd to make procent 4N bytes	*/
 
+/* Process classification constants */
+
+#define PRCLS_CPUB      0       /* Process is CPU-bound                 */
+#define PRCLS_IOB       1       /* Process is I/O-bound                 */
+
 /* Definition of the process table (multiple of 32 bits) */
 
 struct procent {		/* Entry in the process table		*/
@@ -54,6 +59,7 @@ struct procent {		/* Entry in the process table		*/
 	int16	prdesc[NDESC];	/* Device descriptors for process	*/
 	uint32  pr_cputime; /* Milliseconds spent on processes after creation */
 	uint32  pr_tsready; /* Timestamp when process was last set to PR_READY */
+	bool8   pr_class;       /* Classification info                  */
 };
 
 /* Marker for the top of a process stack (used to help detect overflow)	*/
