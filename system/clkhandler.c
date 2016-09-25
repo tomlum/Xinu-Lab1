@@ -10,6 +10,10 @@ void	clkhandler()
 {
 	static	uint32	count1000 = 1000;	/* Count to 1000 ms	*/
 
+	struct procent *prptr;    /* table entry of current process */
+	prptr = &proctab[currpid];
+	prptr->pr_cputime++;      /* increment process counter every ms */
+
 	/* Decrement the ms counter, and see if a second has passed */
 
 	if((--count1000) <= 0) {

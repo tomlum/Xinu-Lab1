@@ -12,13 +12,16 @@ process lab1app1(void)
 {
 	intmask		mask;		/* Saved interrupt mask		*/
 
+	struct procent *prptr;     /* table entry of current process */
+	prptr = &proctab[currpid];
+
 	mask = disable();
 
-	kprintf("%d\n", pr_cputime);
-	kprintf("%d\n", pr_tsready);
+	kprintf("%d\n", prptr->pr_cputime);
+	kprintf("%d\n", prptr->pr_tsready);
 	sleepms(3000);
-	kprintf("%d\n", pr_cputime);
-	kprintf("%d\n", pr_tsready);
+	kprintf("%d\n", prptr->pr_cputime);
+	kprintf("%d\n", prptr->pr_tsready);
 
 	restore(mask);
 }
