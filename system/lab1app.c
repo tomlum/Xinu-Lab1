@@ -8,7 +8,7 @@
  *  both values again.
  *------------------------------------------------------------------------
  */
-process lab1app1(void)
+ process lab1app1(void)
 {
 	intmask		mask;		/* Saved interrupt mask		*/
 
@@ -24,4 +24,6 @@ process lab1app1(void)
 	kprintf("%d\n", prptr->pr_tsready);
 
 	restore(mask);
+
+	return OK;
 }

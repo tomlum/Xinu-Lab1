@@ -13,6 +13,7 @@ void	clkhandler()
 	struct procent *prptr;    /* table entry of current process */
 	prptr = &proctab[currpid];
 	prptr->pr_cputime++;      /* increment process counter every ms */
+	kprintf("test123");
 
 	/* Decrement the ms counter, and see if a second has passed */
 
