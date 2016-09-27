@@ -8,22 +8,23 @@
  *  both values again.
  *------------------------------------------------------------------------
  */
- process lab1app1(void)
+ process lab1app(void)
 {
-	intmask		mask;		/* Saved interrupt mask		*/
+	//intmask		mask;		/* Saved interrupt mask		*/
+
+	//mask = disable();
 
 	struct procent *prptr;     /* table entry of current process */
 	prptr = &proctab[currpid];
 
-	mask = disable();
+	while(1) {
+		kprintf("cputime: %u\n", prptr->pr_cputime);
+		kprintf("tsready: %u\n", prptr->pr_tsready);
+		sleepms(3000);
+		kprintf("~~~~~~~~~~~~~~~~~~~~~\n");
+	}
 
-	kprintf("%d\n", prptr->pr_cputime);
-	kprintf("%d\n", prptr->pr_tsready);
-	sleepms(3000);
-	kprintf("%d\n", prptr->pr_cputime);
-	kprintf("%d\n", prptr->pr_tsready);
-
-	restore(mask);
+	//restore(mask);
 
 	return OK;
 }

@@ -1,9 +1,8 @@
 /* ex5.c - main, prod2, cons2 */
 
 #include <xinu.h>
-#include <lab1app.h>
 
-process prod2(sid32, sid32), cons2(sid32, sid32);
+//process prod2(sid32, sid32), cons2(sid32, sid32);
 
 int32 n = 0; /* Global variable n has initial value zero */ 
 
@@ -16,13 +15,16 @@ int32 n = 0; /* Global variable n has initial value zero */
 process main(void)
 {
 
-  sid32 produced, consumed;
+  //sid32 produced, consumed;
 
-  consumed = semcreate(0);
-  produced = semcreate(1);
+  //consumed = semcreate(0);
+  //produced = semcreate(1);
   
-  resume(create(cons2, 1024, 20, "cons", 2, consumed, produced));
-  resume(create(prod2, 1024, 20, "prod", 2, consumed, produced));
+  //resume(create(cons2, 1024, 20, "cons", 2, consumed, produced));
+  //resume(create(prod2, 1024, 20, "prod", 2, consumed, produced));
+
+  resume(create(lab1app, 1024, 20, "test", 0));
+
   return OK;
 }
 

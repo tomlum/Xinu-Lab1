@@ -32,6 +32,7 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 		/* Old process will no longer remain current */
 
 		ptold->prstate = PR_READY;
+		ptold->pr_tsready = clktime;
 		insert(currpid, readylist, ptold->prprio);
 	}
 
