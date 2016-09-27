@@ -51,6 +51,7 @@ pid32	create(
 	prptr->prhasmsg = FALSE;
 	prptr->pr_cputime = 0;
 	prptr->pr_tsready = 0;
+	prptr->pr_class = PRCLS_CPUB; /* Initial state is CPU-bound */
 
 	/* Set up stdin, stdout, and stderr descriptors for the shell	*/
 	prptr->prdesc[0] = CONSOLE;

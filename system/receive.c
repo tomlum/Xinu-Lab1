@@ -20,6 +20,7 @@ umsg32	receive(void)
 	}
 	msg = prptr->prmsg;		/* Retrieve message		*/
 	prptr->prhasmsg = FALSE;	/* Reset message flag		*/
+	prptr->pr_class = PRCLS_IOB; /* Process is I/O-bound */
 	restore(mask);
 	return msg;
 }
