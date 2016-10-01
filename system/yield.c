@@ -12,6 +12,9 @@ syscall	yield(void)
 
 	mask = disable();
 
+	struct procent *prptr;     /* table entry of current process */
+	prptr = &proctab[currpid];
+
 	prptr->pr_class = PRCLS_IOB; /* Process is I/O-bound */
 
 	resched();

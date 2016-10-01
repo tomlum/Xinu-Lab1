@@ -23,7 +23,8 @@ process main(void)
   //resume(create(cons2, 1024, 20, "cons", 2, consumed, produced));
   //resume(create(prod2, 1024, 20, "prod", 2, consumed, produced));
 
-  resume(create(lab1app, 1024, 20, "test", 0));
+  resume(create(lab1app2a, 1024, 20, "test", 0));
+  resume(create(lab1app2b, 1024, 20, "test", 0));
 
   return OK;
 }
