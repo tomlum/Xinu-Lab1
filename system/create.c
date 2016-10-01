@@ -24,6 +24,7 @@ pid32	create(
 	int32		i;
 	uint32		*a;		/* Points to list of args	*/
 	uint32		*saddr;		/* Stack address		*/
+	bool8       prioisvalid /* True if priority is in range [0, 8] */
 
 	mask = disable();
 	if (ssize < MINSTK)
@@ -37,12 +38,12 @@ pid32	create(
 
 	prcount++;
 	prptr = &proctab[pid];
-	isvalidprio = priority >= 0 && priority <= 8; /* is in range 0-8 */
+	prioisvalid = priority >= 0 && priority <= 8; /* is in range [0, 8] */
 
 	/* Initialize process table entry for new process */
 	prptr->prstate = PR_SUSP;	/* Initial state is suspended	*/
 
-	if (isvalidprio || priority == 500) {
+	if (prioisvalid || priority == 500) {
 		prptr->prprio = priority;
 	} else {
 		prptr->prprio = INITPRIO;
