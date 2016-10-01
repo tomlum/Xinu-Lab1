@@ -37,10 +37,17 @@ pid32	create(
 
 	prcount++;
 	prptr = &proctab[pid];
+	isvalidprio = priority >= 0 && priority <= 8; /* is in range 0-8 */
 
 	/* Initialize process table entry for new process */
 	prptr->prstate = PR_SUSP;	/* Initial state is suspended	*/
-	prptr->prprio = priority;
+
+	if (isvalidprio || priority == 500) {
+		prptr->prprio = priority;
+	} else {
+		prptr->prprio = INITPRIO;
+	}
+	
 	prptr->prstkbase = (char *)saddr;
 	prptr->prstklen = ssize;
 	prptr->prname[PNMLEN-1] = NULLCH;

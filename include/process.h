@@ -25,7 +25,7 @@
 /* Process initialization constants */
 
 #define	INITSTK		65536	/* Initial process stack size		*/
-#define	INITPRIO	20	/* Initial process priority		*/
+#define	INITPRIO	4	/* Initial process priority		*/
 #define	INITRET		userret	/* Address to which process returns	*/
 
 /* Inline code to check process ID (assumes interrupts are disabled)	*/
