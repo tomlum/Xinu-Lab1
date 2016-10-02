@@ -26,6 +26,16 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	ptold = &proctab[currpid];
 	prio = ptold->prprio;
 
+	if (ptold->pr_class == PRCLS_CPUB && ptold->pr_prevclass == PRCLS_CPUB) {
+		
+	} else if (ptold->pr_class == PRCLS_IOB && ptold->pr_prevclass == PRCLS_IOB) {
+		
+	} else if (ptold->pr_class == PRCLS_CPUB && ptold->pr_prevclass == PRCLS_IOB) {
+		
+	} else if (ptold->pr_class == PRCLS_IOB && ptold->pr_prevclass == PRCLS_CPUB) {
+		
+	}
+
 	if (ptold->prstate == PR_CURR) {  /* Process remains eligible */
 		if (ptold->prprio > firstkey(readylist)) {
 			return;
@@ -47,9 +57,9 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	/* Reset quantum time for process */
 	if (prio == 500) {
 		preempt = 10;
-	} else if (prio <= 2) {
+	} else if (prio >= 0 && prio <= 2) {
 		preempt = 200 - (prio * 20);
-	} else {
+	} else if (prio >= 3 && prio <= 8) {
 		preempt = 200 - (prio * 20) - 20;
 	}
 
