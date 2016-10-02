@@ -211,7 +211,19 @@ static	void	sysinit()
 
 	/* Create a ready list for processes */
 
-	readylist = newqueue();
+	readyLists = {
+		newqueue(), 
+		newqueue(), 
+		newqueue(), 
+		newqueue(), 
+		newqueue(), 
+		newqueue(), 
+		newqueue(), 
+		newqueue(), 
+		newqueue(), 
+		newqueue(),
+		newqueue()
+	}
 
 	/* Initialize the real time clock */
 
