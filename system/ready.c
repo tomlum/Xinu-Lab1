@@ -2,7 +2,7 @@
 
 #include <xinu.h>
 
-qid16	readylists;			/* Index of ready list		*/
+qid16[]	readylists;			/* List of of ready lists		*/
 
 /*------------------------------------------------------------------------
  *  ready  -  Make a process eligible for CPU service

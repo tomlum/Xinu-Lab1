@@ -13,6 +13,7 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	struct procent *ptold;	/* Ptr to table entry for old process	*/
 	struct procent *ptnew;	/* Ptr to table entry for new process	*/
 	int32  prio;
+	qid16 readylist;
 
 	/* If rescheduling is deferred, record attempt and return */
 
@@ -36,6 +37,8 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 		
 	}
 
+	readyList = prio != 500? readylists[prio] : readylists[9];
+
 	if (ptold->prstate == PR_CURR) {  /* Process remains eligible */
 		if (ptold->prprio > firstkey(readylist)) {
 			return;
@@ -49,7 +52,12 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	}
 
 	/* Force context switch to highest priority ready process */
-
+	for(int i = 0; i < 9; i++){
+		if(!isempty(readylists[i])){
+			readylist = readylists[i];
+			break;
+		}
+	}
 	currpid = dequeue(readylist);
 	ptnew = &proctab[currpid];
 	ptnew->prstate = PR_CURR;
