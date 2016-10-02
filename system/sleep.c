@@ -46,6 +46,7 @@ syscall	sleepms(
 		return SYSERR;
 	}
 
+	prptr->pr_prevclass = prptr->pr_class; /* Save previous class state */
 	proctab[currpid].pr_class = PRCLS_IOB; /* Process is I/O-bound */
 	proctab[currpid].prstate = PR_SLEEP;
 
