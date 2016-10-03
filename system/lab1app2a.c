@@ -15,6 +15,7 @@ process lab1app2a(void)
 	sleepms(1000);
 
 	kprintf("Process category of a: %u\n", prptr->pr_class);
+	kprintf("Previous process category of a: %u\n", prptr->pr_prevclass);
 
 	return OK;
 }

@@ -2,7 +2,7 @@
 
 #include <xinu.h>
 
-qid16[]	readylists;			/* List of of ready lists		*/
+qid16	readylists[];			/* List of of ready lists		*/
 
 /*------------------------------------------------------------------------
  *  ready  -  Make a process eligible for CPU service
@@ -13,7 +13,7 @@ status	ready(
 	)
 {
 	register struct procent *prptr;
-	qid16 readyList;
+	qid16 readylist;
 	int32 prio;
 
 	if (isbadpid(pid)) {
@@ -27,9 +27,9 @@ status	ready(
 	prptr->pr_tsready = clktime;
 	prio = prptr->prprio;
 	
-	readyList = prio != 500? readylists[prio] : readylists[9];
+	readylist = prio != 500? readylists[prio] : readylists[9];
 
-	insert(pid, readyList, prio);
+	insert(pid, readylist, prio);
 	resched();
 
 	return OK;

@@ -60,6 +60,7 @@ struct procent {		/* Entry in the process table		*/
 	uint32  pr_cputime; /* Milliseconds spent on processes after creation */
 	uint32  pr_tsready; /* Timestamp when process was last set to PR_READY */
 	bool8   pr_class;       /* Classification info                  */
+	bool8   pr_prevclass; /* Past classification info */
 };
 
 /* Marker for the top of a process stack (used to help detect overflow)	*/

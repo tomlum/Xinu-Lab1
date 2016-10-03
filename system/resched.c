@@ -37,7 +37,7 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 		
 	}
 
-	readyList = prio != 500? readylists[prio] : readylists[9];
+	readylist = prio != 500? readylists[prio] : readylists[9];
 
 	if (ptold->prstate == PR_CURR) {  /* Process remains eligible */
 		if (ptold->prprio > firstkey(readylist)) {

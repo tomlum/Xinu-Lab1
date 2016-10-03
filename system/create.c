@@ -24,7 +24,7 @@ pid32	create(
 	int32		i;
 	uint32		*a;		/* Points to list of args	*/
 	uint32		*saddr;		/* Stack address		*/
-	bool8       prioisvalid /* True if priority is in range [0, 8] */
+	bool8       prioisvalid; /* True if priority is in range [0, 8] */
 
 	mask = disable();
 	if (ssize < MINSTK)
