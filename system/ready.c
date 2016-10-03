@@ -27,7 +27,7 @@ status	ready(
 	prptr->pr_tsready = clktime;
 	prio = prptr->prprio;
 	
-	readylist = prio != 500? readylists[prio] : readylists[9];
+	readylist = prio != 500? readylists[prio+1] : readylists[0];
 
 	insert(pid, readylist, prio);
 	resched();

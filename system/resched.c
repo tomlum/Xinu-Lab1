@@ -37,12 +37,12 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 		
 	}
 
-	readylist = prio != 500? readylists[prio] : readylists[9];
-
+	readylist = prio != 500? readylists[prio+1] : readylists[0];
+kprintf("1. I'm here!\n");
 	if (ptold->prstate == PR_CURR) {  /* Process remains eligible */
-		if (ptold->prprio > firstkey(readylist)) {
-			return;
-		}
+		//if (ptold->prprio > firstkey(readylist)) {
+		//	return;
+		//}
 
 		/* Old process will no longer remain current */
 
@@ -50,7 +50,7 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 		ptold->pr_tsready = clktime;
 		insert(currpid, readylist, ptold->prprio);
 	}
-
+kprintf("2. Now I'm here!\n");
 	/* Force context switch to highest priority ready process */
 	for(int i = 0; i < 9; i++){
 		if(!isempty(readylists[i])){
@@ -58,6 +58,7 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 			break;
 		}
 	}
+	kprintf("3. and I made it!\n");
 	currpid = dequeue(readylist);
 	ptnew = &proctab[currpid];
 	ptnew->prstate = PR_CURR;
@@ -72,7 +73,7 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	}
 
 	ctxsw(&ptold->prstkptr, &ptnew->prstkptr);
-
+kprintf("4.  Something else!");
 	/* Old process returns here when resumed */
 
 	return;
