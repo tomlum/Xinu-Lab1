@@ -45,13 +45,13 @@ kprintf("-----Starting a Ready--------------------------------\n");
 
 	/* Set readylist to the appropriate readylist */
 
-	if(0){
+	if(pid==NULLPROC){
 		prptr->prprio = 8;
-		enqueue(pid, readylists[9]);
+		procPush(pid, readylists[9], prio);
 	}
 	else{
 		readylist = prio != 500? readylists[prio+1] : readylists[0];
-		insert(pid, readylist, prio);
+		procPush(pid, readylist, prio);
 	}
 
 	kprintf("So NOW the readylists look like\n");

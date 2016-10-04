@@ -89,8 +89,9 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 
 		ptold->prstate = PR_READY;
 		ptold->pr_tsready = clktime;
-		insert(currpid, readylist, prio);
+		procPush(currpid, readylist, prio);
 	}
+
 
 
 	kprintf("So now here's what the readylists looks like\n");
