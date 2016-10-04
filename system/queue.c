@@ -50,37 +50,3 @@ pid32	dequeue(
 	queuetab[pid].qnext = EMPTY;
 	return pid;
 }
-
-/*------------------------------------------------------------------------
- *  push  -  Insert a process at the top of a stack
- *------------------------------------------------------------------------
- */
-pid32	push(
-	  pid32		pid,		/* ID of process to insert	*/
-	  qid16		q		/* ID of queue to use		*/
-	)
-{
-	return enqueue(pid, q);
-}
-
-/*------------------------------------------------------------------------
- *  pop  -  Remove and return the last process on a list
- *------------------------------------------------------------------------
- */
-pid32	pop(
-	  qid16		q		/* ID queue to use		*/
-	)
-{
-	pid32	pid;			/* ID of process removed	*/
-
-	if (isbadqid(q)) {
-		return SYSERR;
-	} else if (isempty(q)) {
-		return EMPTY;
-	}
-
-	pid = getlast(q);
-	queuetab[pid].qprev = EMPTY;
-	queuetab[pid].qnext = EMPTY;
-	return pid;
-}
