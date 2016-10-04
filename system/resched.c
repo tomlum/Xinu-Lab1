@@ -112,8 +112,18 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	for(int i = 9; i >= 0; i--){
 		if(nonempty(readylists[i])){
 			readylist = readylists[i];
+																										if(DBUG){	kprintf("Readylist %d has an element!\n", i);}
 			break;
 		}
+	}
+
+	//If NULLPROC, don't bother context switching
+	if(queuetab[queuehead(readylist)].qnext==NULLPROC && currpid==NULLPROC){
+																							if(DBUG){		kprintf("WOAH THAT'S THE NULL PROC OMG\n");
+																									kprintf("I REPEAT THAT'S THE NULL PROC OMG\n");
+																									kprintf("I'M STILL IN DISBELIEF THAT THAT'S THE NULL PROC OMG\n");
+																							}
+		return; //Stopping on Null Proc encounter doesn't work yet
 	}
 
 	currpid = dequeue(readylist);
@@ -132,17 +142,8 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 
 
 
-	//If NULLPROC, don't bother context switching
-	if(0 && currpid==NULLPROC){
-																							if(DBUG){		kprintf("WOAH THAT'S THE NULL PROC OMG\n");
-																									kprintf("I REPEAT THAT'S THE NULL PROC OMG\n");
-																									kprintf("I'M STILL IN DISBELIEF THAT THAT'S THE NULL PROC OMG\n");
-																							}
-		return; //Stopping on Null Proc encounter doesn't work yet
-	}
-	else{
-		ctxsw(&ptold->prstkptr, &ptnew->prstkptr);
-	}
+	ctxsw(&ptold->prstkptr, &ptnew->prstkptr);
+	
 
 																							if(DBUG){	kprintf("--Ending a Resched--------------------------------\n");}
 
