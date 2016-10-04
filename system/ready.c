@@ -13,17 +13,17 @@ status	ready(
 	  pid32		pid		/* ID of process to make ready	*/
 	)
 {
-if(DBUG){ kprintf("\n-----Starting a Ready--------------------------------\n");
-	kprintf("Okay, here's what the readylists look like\n");
-	for(int i = 0; i < 10; i++){
-		if(i==0){
-			kprintf("500 is %d\n", i, nonempty(readylists[i]));
-		}
-		else{
-			kprintf("%d is %d\n", i-1, nonempty(readylists[i]));
-		}
-	}
-}
+																									if(DBUG){ kprintf("\n-----Starting a Ready--------------------------------\n");
+																										kprintf("Okay, here's what the readylists look like\n");
+																										for(int i = 0; i < 10; i++){
+																											if(i==9){
+																												kprintf("500 is %d\n", nonempty(readylists[i]));
+																											}
+																											else{
+																												kprintf("%d is %d\n", i, nonempty(readylists[i]));
+																											}
+																										}
+																									}
 
 	register struct procent *prptr;
 	qid16 readylist;
@@ -40,33 +40,34 @@ if(DBUG){ kprintf("\n-----Starting a Ready--------------------------------\n");
 	prptr->pr_tsready = clktime;
 	prio = prptr->prprio;
 
-if(DBUG){
-	kprintf("So the current pid is %d\n", pid);
-	kprintf("This process is of priority %d \n so let's insert it\n", prio);
-}
+																									if(DBUG){
+																										kprintf("So the current pid is %d\n", pid);
+																										kprintf("This process is of priority %d \n so let's insert it\n", prio);
+																									}
 	/* Set readylist to the appropriate readylist */
 
 	if(pid==NULLPROC){
-		prptr->prprio = 8;
+		prptr->prprio = 0;
+		enqueue(NULLPROC, readylists[0]);
 	}
 
-	readylist = prio != 500? readylists[prio+1] : readylists[0];
+	readylist = prio != 500? readylists[prio] : readylists[9];
 	procPush(pid, readylist, prio);
 
-if(DBUG){
-	kprintf("So NOW the readylists look like\n");
-	for(int i = 0; i < 10; i++){
-		if(i==0){
-			kprintf("500 is %d\n", i, nonempty(readylists[i]));
-		}
-		else{
-			kprintf("%d is %d\n", i-1, nonempty(readylists[i]));
-		}
-	}
-	
+																									if(DBUG){
+																										kprintf("So NOW the readylists look like\n");
+																										for(int i = 0; i < 10; i++){
+																											if(i==9){
+																												kprintf("500 is %d\n", nonempty(readylists[i]));
+																											}
+																											else{
+																												kprintf("%d is %d\n", i, nonempty(readylists[i]));
+																											}
+																										}
+																										
 
-	kprintf("-----Ending a Ready--------------------------------\n");
-}
+																										kprintf("-----Ending a Ready--------------------------------\n");
+																									}
 	resched();
 
 	return OK;

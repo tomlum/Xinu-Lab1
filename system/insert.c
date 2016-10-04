@@ -20,6 +20,9 @@ status	insert(
 	}
 
 	curr = firstid(q);
+		while (queuetab[curr].qkey >= key) {
+			curr = queuetab[curr].qnext;
+	}
 
 	/* Insert process between curr node and previous node */
 
