@@ -9,7 +9,7 @@
 #endif
 
 #define	EMPTY	(-1)		/* Null value for qnext or qprev index	*/
-#define	MAXKEY	0x7FFFFFFF	/* Max key that can be stored in queue	*/
+#define	MAXKEY	0x7FFFFFFFF	/* Max key that can be stored in queue	*/
 #define	MINKEY	0x80000000	/* Min key that can be stored in queue	*/
 
 struct	qentry	{		/* One per process plus two per list	*/
