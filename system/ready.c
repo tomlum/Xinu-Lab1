@@ -13,7 +13,7 @@ status	ready(
 	  pid32		pid		/* ID of process to make ready	*/
 	)
 {
-if(DBUG){ kprintf("-----Starting a Ready--------------------------------\n");
+if(DBUG){ kprintf("\n-----Starting a Ready--------------------------------\n");
 	kprintf("Okay, here's what the readylists look like\n");
 	for(int i = 0; i < 10; i++){
 		if(i==0){

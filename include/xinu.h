@@ -42,3 +42,4 @@
 #include <lab1app.h>
 #include <lab1app2a.h>
 #include <lab1app2b.h>
+#include <lab1app4tests.h>

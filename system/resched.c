@@ -13,7 +13,7 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 {
 if(DBUG){
 		kprintf(".");
-		kprintf("--Starting a Resched--------------------------------\n");
+		kprintf("\n--Starting a Resched--------------------------------\n");
 }
 	struct procent *ptold;	/* Ptr to table entry for old process	*/
 	struct procent *ptnew;	/* Ptr to table entry for new process	*/
