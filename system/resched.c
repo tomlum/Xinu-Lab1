@@ -1,6 +1,7 @@
 /* resched.c - resched, resched_cntl */
 
 #include <xinu.h>
+#define DBUG 0
 
 struct	defer	Defer;
 
@@ -10,14 +11,16 @@ struct	defer	Defer;
  */
 void	resched(void)		/* Assumes interrupts are disabled	*/
 {
-	kprintf(".");
-	kprintf("--Starting a Resched--------------------------------\n");
+if(DBUG){
+		kprintf(".");
+		kprintf("--Starting a Resched--------------------------------\n");
+}
 	struct procent *ptold;	/* Ptr to table entry for old process	*/
 	struct procent *ptnew;	/* Ptr to table entry for new process	*/
 	int32  prio;
 	qid16 readylist;
 
-
+if(DBUG){
 	kprintf("Okay, here's what the readylists look like\n");
 	for(int i = 0; i < 10; i++){
 		if(i==0){
@@ -27,11 +30,11 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 			kprintf("%d is %d\n", i-1, nonempty(readylists[i]));
 		}
 	}
-	
+}
 
 	/* If rescheduling is deferred, record attempt and return */
 	if (Defer.ndefers > 0) {
-	kprintf("WOAH WE'RE DEFERRING OKAY THEN %d\n", currpid, prio);
+if(DBUG){	kprintf("WOAH WE'RE DEFERRING OKAY THEN %d\n", currpid, prio);}
 		Defer.attempt = TRUE;
 		return;
 	}
@@ -40,36 +43,37 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	ptold = &proctab[currpid];
 	prio = ptold->prprio;
 
-
+if(DBUG){
 	kprintf("So the current pid is %d with priority %d\n", currpid, prio);
 	kprintf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 	kprintf("Old PR Class is %d and the old class was %d\n", ptold->pr_class, ptold->pr_prevclass);
+}
 	if(prio != 500 && preempt == QUANTUM){
 		if (prio > 0 && ptold->pr_class == PRCLS_IOB && ptold->pr_prevclass == PRCLS_IOB) {
 				ptold->prprio--;
-				kprintf("But we're increasing the prio so it's now %d \n", prio);
+if(DBUG){kprintf("But we're increasing the prio so it's now %d \n", prio);}
 		}
 		else if (prio > 1 && ptold->pr_class == PRCLS_IOB && ptold->pr_prevclass == PRCLS_CPUB) {
 				ptold->prprio-=2;
-				kprintf("But we're increasing the prio so it's now %d \n", prio);
+if(DBUG){kprintf("But we're increasing the prio so it's now %d \n", prio);}
 			}
 		else if (prio < 8 && ptold->pr_class == PRCLS_CPUB && ptold->pr_prevclass == PRCLS_CPUB) {
 				ptold->prprio++;
-				kprintf("But we're reducing the prio so it's now %d \n", prio);
+if(DBUG){kprintf("But we're reducing the prio so it's now %d \n", prio);}
 			}  
 		else if (prio < 7 && ptold->pr_class == PRCLS_CPUB && ptold->pr_prevclass == PRCLS_IOB) {
 				ptold->prprio+=2;
-				kprintf("But we're decreasing the prio so it's now %d \n", prio);
+if(DBUG){kprintf("But we're decreasing the prio so it's now %d \n", prio);}
 				
 		} 
 	}
 	prio = ptold->prprio;
-	kprintf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+if(DBUG){	kprintf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");}
 	
 	/* Set readylist to the appropriate readylist */
 	readylist = prio != 500? readylists[prio+1] : readylists[0];
 
-	kprintf("This process is of priority %d so let's insert it\n", prio);
+if(DBUG){	kprintf("This process is of priority %d so let's insert it\n", prio);}
 
 	if (ptold->prstate == PR_CURR) {  /* Process remains eligible */
 		int32 lowerPrio = 0;
@@ -90,11 +94,12 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 		ptold->prstate = PR_READY;
 		ptold->pr_tsready = clktime;
 		procPush(currpid, readylist, prio);
+if(DBUG){		kprintf("it's been pushed\n");}
 	}
 
 
 
-	kprintf("So now here's what the readylists looks like\n");
+if(DBUG){	kprintf("So now here's what the readylists looks like\n");
 	for(int i = 0; i < 10; i++){
 		if(i==0){
 			kprintf("500 is %d\n", nonempty(readylists[i]));
@@ -103,10 +108,10 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 			kprintf("%d is %d\n", i-1, nonempty(readylists[i]));
 		}
 	}
-	
+
 
 	kprintf("Now let's dequeue from the readylists\n");
-
+}
 	/* Force context switch to highest priority ready process */
 	for(int i = 0; i < 10; i++){
 		if(nonempty(readylists[i])){
@@ -116,7 +121,7 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	}
 
 	currpid = dequeue(readylist);
-	kprintf("and that pid is %d\n", currpid);
+if(DBUG){	kprintf("and that pid is %d\n", currpid);}
 	ptnew = &proctab[currpid];
 	ptnew->prstate = PR_CURR;
 
@@ -129,9 +134,18 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 		preempt = 200 - (prio * 20) - 20;
 	}
 
-	ctxsw(&ptold->prstkptr, &ptnew->prstkptr);
+	if(currpid==NULLPROC){
+if(DBUG){		kprintf("WOAH THAT'S THE NULL PROC OMG\n");
+		kprintf("I REPEAT THAT'S THE NULL PROC OMG\n");
+		kprintf("I'M STILL IN DISBELIEF THAT THAT'S THE NULL PROC OMG\n");
+}
+		//return; Stopping on Null Proc encounter doesn't work yet
+	}
+	//else{
+		ctxsw(&ptold->prstkptr, &ptnew->prstkptr);
+	//}
 
-	kprintf("--Ending a Resched--------------------------------\n");
+if(DBUG){	kprintf("--Ending a Resched--------------------------------\n");}
 
 	/* Old process returns here when resumed */
 
