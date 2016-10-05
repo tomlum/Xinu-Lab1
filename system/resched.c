@@ -21,7 +21,7 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 	qid16 readylist;
 
 																							if(DBUG){
-																								kprintf("Okay, here's what the readylists look like\n");
+																								kprintf("Okay, here's what the emptyness of the lists looks like\n");
 																								for(int i = 0; i < 10; i++){
 																									if(i==9){
 																										kprintf("500 is %d\n", nonempty(readylists[i]));
@@ -45,36 +45,37 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 
 																							if(DBUG){
 																								kprintf("So the current pid is %d with priority %d\n", currpid, prio);
-																								kprintf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-																								kprintf("Old PR Class is %d and the old class was %d\n", ptold->pr_class, ptold->pr_prevclass);
+																								kprintf("~~Let's see if we need to reprioritize~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+																								kprintf("The proc's class is %d and its previous class was %d\n", ptold->pr_class, ptold->pr_prevclass);
 																							}
 	if(prio != 500 && preempt == QUANTUM){
 		if (prio < 8 && ptold->pr_class == PRCLS_IOB && ptold->pr_prevclass == PRCLS_IOB) {
 				ptold->prprio++;
-																							if(DBUG){kprintf("But we're increasing the prio so it's now %d \n", prio);}
+																							if(DBUG){kprintf("So we're increasing the prio so it's now %d \n", ptold->prprio);}
 		}
 		else if (prio < 7 && ptold->pr_class == PRCLS_IOB && ptold->pr_prevclass == PRCLS_CPUB) {
 				ptold->prprio+=2;
-																							if(DBUG){kprintf("But we're increasing the prio so it's now %d \n", prio);}
+																							if(DBUG){kprintf("So we're increasing the prio so it's now %d \n", ptold->prprio);}
 			}
 		else if (prio > 0 && ptold->pr_class == PRCLS_CPUB && ptold->pr_prevclass == PRCLS_CPUB) {
 				ptold->prprio--;
-																							if(DBUG){kprintf("But we're reducing the prio so it's now %d \n", prio);}
+																							if(DBUG){kprintf("So we're reducing the prio so it's now %d \n", ptold->prprio);}
 			}  
 		else if (prio > 1 && ptold->pr_class == PRCLS_CPUB && ptold->pr_prevclass == PRCLS_IOB) {
 				ptold->prprio-=2;
-																							if(DBUG){kprintf("But we're decreasing the prio so it's now %d \n", prio);}
+																							if(DBUG){kprintf("So we're decreasing the prio so it's now %d \n", ptold->prprio);}
 				
 		} 
+	}
+	else{
+																							if(DBUG){kprintf("Nope, no need to reprioritize");}
+
 	}
 	prio = ptold->prprio;
 																							if(DBUG){	kprintf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");}
 	
 	/* Set readylist to the appropriate readylist */
 	readylist = prio != 500? readylists[prio] : readylists[9];
-
-																							if(DBUG){	kprintf("This process is of priority %d so let's insert it\n", prio);}
-
 	if (ptold->prstate == PR_CURR) {  /* Process remains eligible */
 		for(int i = 9; i >= 0; i--){
 			if(nonempty(readylists[i])){
@@ -90,12 +91,16 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 		ptold->prstate = PR_READY;
 		ptold->pr_tsready = clktime;
 		procPush(currpid, readylist, prio);
-																							if(DBUG){		kprintf("it's been pushed\n");}
+																							if(DBUG){	kprintf("This process is of priority %d so let's insert it\n", prio);}
+
+	}
+	else{
+																									if(DBUG){	kprintf("But we shouldn't insert it to the readylist");}
 	}
 
 
 
-																							if(DBUG){	kprintf("So now here's what the readylists looks like\n");
+																							if(DBUG){	kprintf("So now here's what the emptyness of the readylists look like now\n");
 																								for(int i = 0; i < 10; i++){
 																										if(i==9){
 																										kprintf("500 is %d\n", nonempty(readylists[i]));
@@ -119,9 +124,7 @@ void	resched(void)		/* Assumes interrupts are disabled	*/
 
 	//If NULLPROC, don't bother context switching
 	if(queuetab[queuehead(readylist)].qnext==NULLPROC && currpid==NULLPROC){
-																							if(DBUG){		kprintf("WOAH THAT'S THE NULL PROC OMG\n");
-																									kprintf("I REPEAT THAT'S THE NULL PROC OMG\n");
-																									kprintf("I'M STILL IN DISBELIEF THAT THAT'S THE NULL PROC OMG\n");
+																							if(DBUG){		kprintf("All that's left is the NULLPROC!\n");
 																							}
 		return; //Stopping on Null Proc encounter doesn't work yet
 	}

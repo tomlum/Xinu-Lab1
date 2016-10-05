@@ -1,0 +1,53 @@
+Overall design
+--------------
+Because there are a finite and predetermined number of priorities our priority queue is now an array of 10 stacks, representing individual readylists for priority levels 0-8 and 500.  Adding a process is done by indexing the array by the priority of the process, and adding the process to that corresponding readylist.  Acquiring the next process is done by checking the array of readylists from highest to lowest priority for a process.
+
+Null process handling
+---------------------
+Whenever the null process is scheduled onto the ready list, it is inserted into the bottom of the stack for the lowest priority level, so it will only run if there are absolutely no other processes of higher priority. 
+
+Explanation of O(1) scheduling
+------------------------------
+Adding to the readylist - Adding to the readylist is done by indexing the array of readylists with the process’ priority to find the corresponding list (O(1)) and adding it to the top of that stack (O(1) due to linked list implementation of stack).
+
+Removing from the readylist - Finding the next ready process is done by scanning down the array of readylists in decreasing priority for the first non empty readylist.  Because the array of readylists is fixed and predetermined, at worst this will take time O(10) no matter what.  As well, each readylist is checked for emptyness using the function nonempty(readylist) (O(1)).  The first nonempty list we encounter has its head popped off (O(1)) and that process is context switched in.
+
+For example, say the stacks for priority levels 6-8 and 500 are all empty while the stack for priority 5 is not. This means we look for our next process in the fifth stack in our array, and the next process that will be run will be the one that is popped off of that stack. 
+
+Testing
+-------
+Our test file, lab1app4tests.c creates two processes, highPrioProc and lowPrioProc. lowPrioProc will end only when it has been assigned the lowest possible priority (0), and highPrioProc will end once it’s been assigned the highest (8, given the exemption of priority 500). To accomplish their goals, lowPrioProc sleeps so as to mark itself as an I/O-bound process, and highPrioProc doesn’t, so as to remain CPU-bound. Being I/O-bound decreases lowPrioProc’s priority by 1 each time it is rescheduled (and by 2 initially on changing from CPU to I/O bound), and because lowPrioProc will not end until it has reached its priority goal, it will continue to use all of its quantum time and be rescheduled and reprioritized lower and lower.  Similarly highPrioProc will continue to run, eating up its quantum time until it is rescheduled and reprioritized to a higher priority.
+
+Files
+-----
+We ended up modifying these files:
+    clkhandler.c
+    create.c
+    initialize.c
+    insert.c
+    queue.c
+    ready.c
+    receive.c
+    resched.c
+    sleep.c
+    stacktrace.c (comments only)
+    yield.c
+    kernel.h
+    process.h
+    prototypes.h
+    queue.h
+    xinu.h
+
+We also created these files:
+    lab1app.c
+    lab1app2a.c
+    lab1app2b.c
+    lab1app4tests.c
+    starvation.c
+    lab1app.h
+    lab1app2a.h
+    lab1app2b.h
+    lab1app4tests.h
+    o1.txt
+
+*Note* that lines related to debugging are denoted by large amounts of whitespace to make distinguishing them from functional code easier. We suggest that word-wrap is disabled when viewing the source.
