@@ -1,6 +1,6 @@
 Overall design
 --------------
-Because there are a finite and predetermined number of priorities our priority queue is now an array of 10 stacks, representing individual readylists for priority levels 0-8 and 500.  Adding a process is done by indexing the array by the priority of the process, and adding the process to that corresponding readylist.  Acquiring the next process is done by checking the array of readylists from highest to lowest priority for a process.
+Because there are a finite and predetermined number of priorities, our priority queue is now an array of 10 stacks, representing individual readylists for priority levels 0-8 and 500.  Adding a process is done by indexing the array by the priority of the process, and adding the process to that corresponding readylist.  Acquiring the next process is done by checking the array of readylists from highest to lowest priority for a process.
 
 Null process handling
 ---------------------
@@ -16,7 +16,7 @@ For example, say the stacks for priority levels 6-8 and 500 are all empty while 
 
 Testing
 -------
-Our test file, lab1app4tests.c creates two processes, highPrioProc and lowPrioProc. lowPrioProc will end only when it has been assigned the lowest possible priority (0), and highPrioProc will end once it’s been assigned the highest (8, given the exemption of priority 500). To accomplish their goals, lowPrioProc sleeps so as to mark itself as an I/O-bound process, and highPrioProc doesn’t, so as to remain CPU-bound. Being I/O-bound decreases lowPrioProc’s priority by 1 each time it is rescheduled (and by 2 initially on changing from CPU to I/O bound), and because lowPrioProc will not end until it has reached its priority goal, it will continue to use all of its quantum time and be rescheduled and reprioritized lower and lower.  Similarly highPrioProc will continue to run, eating up its quantum time until it is rescheduled and reprioritized to a higher priority.
+Our test file, lab1app4tests.c creates two processes, highPrioProc and lowPrioProc. lowPrioProc will end only when it has been assigned the lowest possible priority (0), and highPrioProc will end once it’s been assigned the highest (8, given the exemption of priority 500). To accomplish their goals, highPrioProc sleeps so as to mark itself as an I/O-bound process, and lowPrioProc doesn’t, so as to remain CPU-bound. Being I/O-bound increases highPrioProc’s priority by 1 each time it is rescheduled (and by 2 initially on changing from CPU to I/O bound), and because highPrioProc will not end until it has reached its priority goal, it will continue to use all of its quantum time and be rescheduled and reprioritized higher and higher.  Similarly lowPrioProc will continue to run, eating up its quantum time until it is rescheduled and reprioritized to a lower priority.
 
 Files
 -----
